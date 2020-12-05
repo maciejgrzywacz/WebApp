@@ -15,7 +15,7 @@ if(isset($postdata) && !empty($postdata)) {
     $password = $data->password;
 
     try {
-        $db = new PDO("sqlite:users.db");
+        $db = new PDO("sqlite:..\..\database\users.db");
         
         $sql = "SELECT password_hash FROM users WHERE Login = :login";
         $res = $db->prepare($sql);
