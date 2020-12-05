@@ -1,50 +1,60 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Content-type: application/json; charset=utf-8");
 
-// pobranie danych (GET imiona.php?filtr=a)
-if(isset($_POST["login"]) && isset($_POST["password_hash"]))
-{
+// get post data from angular
+$postdata = file_get_contents("php://input");
 
-    $f = $_GET["filtr"];
-    $f = substr(strip_tags($f), 0, 20);
-    $f = $f . '%';
+// Set error code. If anything goes wrong we return it.
+// status code 500 - server error
+http_response_code(500);
 
+if(isset($postdata) && !empty($postdata)) {
 
-    
-    $sql = "SELECT * FROM users WHERE login is :Login AND Password_Hash IS :password_hash ";
-    $res->bindValue(':f', $f);
-    $res->execute();
-    while($rec = $res->fetch(PDO::FETCH_ASSOC))
-    {
-        $result[] = $rec;
+    $data = json_decode($postdata);
+    $login = $data->login;
+    $password = $data->password;
+
+    try {
+        $db = new PDO("sqlite:..\..\database\users.db");
+        
+        $sql = "SELECT password_hash FROM users WHERE Login = :login";
+        $res = $db->prepare($sql);
+        
+        if (!$res) {
+            error_log("ERROR preparing DB statment");
+            error_log($res->errorInfo());
+            return;
+        }
+
+        if (!$res->bindValue(":login", $login)) {
+            error_log("ERROR binding value to DB statemant");
+            error_log($res->errorInfo());
+            return;
+        }
+
+        if ($res->execute()) {
+            $password_hash = $res->fetch(PDO::FETCH_ASSOC)["password_hash"];
+
+            if (password_verify($password, $password_hash)) {
+                // recieved password matches user password stored in base.
+                // status code 200 - ok
+                http_response_code(200);
+            }
+            else {
+                // no such user in database
+                // status code 401 - unauthorized
+                http_response_code(401);
+            }
+        }
+        else {
+            error_log("ERROR executing DB statement");
+            error_log($res->errorInfo());
+        }
+
+    } catch(PDOException $e) {
+        error_log($e->getMessage());
+        http_response_code(401);
     }
 
-    if()
-
-    print(json_encode("status:success"));
 }
-else
-{
-    print(json_encode("status:error"))
-}
-
-// polaczenie z baza
-$db = new PDO("sqlite:users.db");
-
-// przygotowanie polecenia
-$sql = "SELECT * FROM users WHERE login LIKE :f ";
-
-// wykonanie polecenia
-$res = $db->prepare($sql);
-
-// tu by bylo $res->bindValue(":w1", $w1);
-$res->bindValue(':f', $f);
-$res->execute();
-while($rec = $res->fetch(PDO::FETCH_ASSOC))
-{
-    $wynik[] = $rec;
-}
-
-print(json_encode(array("imiona" => $wynik)));
 ?> 
