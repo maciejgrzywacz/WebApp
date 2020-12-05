@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Najpopularniejsze imiona</title>
-        <meta charset="utf-8" />
-        <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css" />
-        <script src="https://unpkg.com/angular/angular.min.js"></script>
-        <script src="login.js"></script>
-    </head>
-    <body ng-app="loginApp" ng-controller="loginCtrl">
-        <div class="container">
-            <h3>Logowanie:</h3>
-            Login: <input ng-model="login" />
-            Password <input ng-model="password"/>
-            <button ng-click="loginUser()">Login</button>
-            <div ng-bind="statusMessage"></div>
+  <head>
+    <title>Login</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+    <script src="https://unpkg.com/angular/angular.min.js"></script>
+    <script src="login.js"></script>
+  </head>
+  <body ng-app="loginApp" ng-controller="loginCtrl">
+    <div class="container-fluid d-flex justify-content-center align-items-center">
+      <div class="w-35 p-5 border border-primary rounded">
+        <h3 class="text-primary">Welcome</h3>
+        <div class="mt-4">
+          Login: <input class="form-control" ng-model="login" />
         </div>
-    </body>
+        <div class="mt-4">
+          Password: <input class="form-control" ng-model="password" />
+        </div>
+        <div class="mt-3">
+          <button class="btn btn-primary" ng-click="loginUser()">Login</button>
+        </div>
+        <div class="mt-3" id="message"></div>
+            <!-- <a href="../registrationScreen/registration.html" class="mt-4 stretched-link">Dont't have an account? Sign up</a> -->
+        </div>
+    </div>
+  </body>
 </html>
