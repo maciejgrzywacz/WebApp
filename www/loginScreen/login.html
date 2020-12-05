@@ -10,10 +10,10 @@
     <body ng-app="loginApp" ng-controller="loginCtrl">
         <div class="container">
             <h3>Logowanie:</h3>
-            Login: <input ng-bind="login"/>
-            Password <input ng-bind="password"/>
-            <button>Login</button>
-            <div id="message"></div>
+            Login: <input ng-model="login" />
+            Password <input ng-model="password"/>
+            <button ng-click="loginUser()">Login</button>
+            <div ng-bind="statusMessage"></div>
         </div>
     </body>
 </html>
