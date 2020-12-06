@@ -1,0 +1,2 @@
+drop table users;
+create table users(id integer primary key autoincrement, login varchar(20) unique, password_hash char(60), name varchar(20), surname varchar(20), pesel varchar(8) unique, age integer, country varchar(20), city varchar(30), address varchar(40), postcode varchar(6));
