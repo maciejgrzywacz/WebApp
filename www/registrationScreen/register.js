@@ -3,14 +3,7 @@ app.controller("registerCtrl", function($scope, $http) {
 
     $scope.registerButtonDisabled = true;
 
-    $scope.valueChanged = function() {
-        
-            
-        if ($scope.pesel) {
-            console.log($scope.pesel)
-            console.log($scope.pesel.length)
-        }
-        
+    $scope.valueChanged = function() {        
         // validate input
         if ($scope.login && $scope.login!=='' &&
         $scope.password && $scope.password!=='' &&
@@ -29,12 +22,10 @@ app.controller("registerCtrl", function($scope, $http) {
         else {
             $scope.registerButtonDisabled = true;
         }
-
     };
 
     $scope.registerUser = function() {
         // check if passwords match
-        if ($scope.login )
         if ($scope.password != $scope.confirmPassword) {
             alert("Passwords do not match!");
             $scope.password = "";
@@ -44,22 +35,38 @@ app.controller("registerCtrl", function($scope, $http) {
         $data = {
             login: $scope.login,
             password: $scope.password,
+            name: $scope.name,
+            surname: $scope.surname,
+            pesel: $scope.pesel,
+            age: $scope.age,
+            country: $scope.country,
+            city: $scope.city,
+            address: $scope.address,
+            postcode: $scope.postcode
         };
 
-
-        // $login = $scope.login;
-
-        // $data = {};
-        // $data.login = $login;
-        // $data.password = $password;
-
-        // $http.post("register.php", {login: $login, password: $password}).then(
-        //     function success(response) {
-        //         $scope.statusMessage = "Success!";
-        //     },
-        //     function error(response){
-        //         $scope.statusMessage = "Error :<";
-        //     }
-        // );
+        $http.post("register.php", $data).then(
+            function success(response) {
+                alert(response.data.message);
+                $scope.login = "";
+                $scope.password = "";
+                $scope.name = "";
+                $scope.surname = "";
+                $scope.pesel = "";
+                $scope.age = "";
+                $scope.country = "";
+                $scope.city = "";
+                $scope.address = "";
+                $scope.postcode = "";
+            },
+            function error(response){
+                if(response.status == 400) {
+                    alert(response.data.message);
+                }
+                else {
+                    alert("Server error: user not added.");
+                }
+            }
+        );
     }
 });
