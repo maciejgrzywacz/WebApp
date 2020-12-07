@@ -23,13 +23,12 @@ if(isset($postdata) && !empty($postdata)) {
     $address = $data->address;
     $postcode = $data->postcode;
 
-    $ph = password_hash($password, PASSWORD_DEFAULT);
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
     try {
         $db = new PDO("sqlite:..\..\database\users.db");
         if (!$db) {
             error_log("Error opening database");
-            print(json_encode("{status: 'error', message: 'Server error'}"));
             return;
         }
         
@@ -39,7 +38,6 @@ if(isset($postdata) && !empty($postdata)) {
         if (!$res) {
             error_log("ERROR preparing DB statment");
             error_log($db->errorCode());
-            print(json_encode("{status: 'error', message: 'Server error'}"));
             return;
         }
 
@@ -58,7 +56,6 @@ if(isset($postdata) && !empty($postdata)) {
         if (!status) {
             error_log("ERROR binding value to DB statemant");
             error_log($res->errorInfo());
-            print(json_encode("{status: 'error', message: 'Server error'}"));
             return;
         }
 
@@ -66,22 +63,22 @@ if(isset($postdata) && !empty($postdata)) {
             // successfully added user to database
             // status code 201 - created
             http_response_code(201);
-            print(json_encode($obj->message = "User already exists"));
+            $response->message = "User added successfully.";
+            print(json_encode($response));
         }
         else {
             error_log("ERROR executing DB statement");
             error_log($res->errorCode());
             if ($res->errorCode() == 23000) {
                 http_response_code(400);
-                $obj->message = "User already exists.";
-                print(json_encode($obj));
+                $response->message = "User already exists.";
+                print(json_encode($response));
                 return;
             }
         }
     } catch(PDOException $e) {
         error_log("ERROR adding user to database.");
         error_log($e->getMessage());
-        print(json_encode("{status: 'error', message: 'Server error'}"));
     }
 }
 ?>

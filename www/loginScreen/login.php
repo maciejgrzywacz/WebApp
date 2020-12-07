@@ -43,6 +43,7 @@ if(isset($postdata) && !empty($postdata)) {
             else {
                 // no such user in database
                 // status code 401 - unauthorized
+                error_log('passwords do not match');
                 http_response_code(401);
             }
         }

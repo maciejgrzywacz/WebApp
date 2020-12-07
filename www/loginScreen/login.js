@@ -11,10 +11,10 @@ app.controller("loginCtrl", function($scope, $http) {
 
         $http.post("login.php", {login: $login, password: $password}).then(
             function success(response) {
-                $scope.statusMessage = "Success!";
+                alert("User logged in.")
             },
             function error(response){
-                $scope.statusMessage = "Error :<";
+                alert('Access denied.');
             }
         );
     }
