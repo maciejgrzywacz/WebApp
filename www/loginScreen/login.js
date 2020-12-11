@@ -12,13 +12,11 @@ app.controller("loginCtrl", function ($scope, $http) {
 
     $http.post("login.php", { login: $login, password: $password }).then(
       function success(response) {
-        alert("User logged in.");
         document.getElementById("messageSucces").style.display = "block";
         window.location.replace("../user/user.html?login=" + $login);
       },
       function error(response) {
         document.getElementById("messageAlert").style.display = "block";
-        alert("Access denied.");
       }
     );
   };
