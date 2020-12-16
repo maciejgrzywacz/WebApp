@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>apiCall</title>
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#loadData").click(function (e) {
+
+                var currency = $("select.currency").children("option:selected").val();
+                console.log(currency);
+                var value = $("select.value").children("option:selected").val();
+                console.log(value)
+
+                $.ajax({
+                    url: 'https://api.nbp.pl/api/exchangerates/tables/a?format=json',
+                    dataType: 'json',
+                    success: function(apiResponse) {
+                        console.log(apiResponse);
+                        var rates = apiResponse[0].rates;
+                        
+                        for (var i = 0; i < rates.length; i++){
+                            if (rates[i].currency == currency) {
+                                if (value == 'code') {
+                                    $("#MoneyData").html(`code is ${rates[i].code}`);
+                                }
+                                else if (value == 'mid') {
+                                    $("#MoneyData").html(`mid is ${rates[i].mid}`);
+                                }
+                                else {
+                                    $("#MoneyData").html(`code is ${rates[i].code} and mid is ${rates[i].mid}`);
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+  </head>
+  <body>
+    <div
+      class="container-fluid d-flex justify-content-center align-items-center"
+    >
+      <div class="w-35 p-5 border border-primary rounded">
+        <select class="currency">
+          <option value="yuan renminbi (Chiny)">yuan renminbi</option>
+          <option value="peso filipińskie">peso filipińskie</option>
+          <option value="peso chilijskie">peso chilijskie</option>
+        </select>
+        <select class="value">
+          <option value="code">code</option>
+          <option value="all">all</option>
+          <option value="mid">mid</option>
+        </select>
+        <button class="btn btn-primary" id="loadData">Load</button>
+        <div id="MoneyData"></div>
+      </div>
+    </div>
+  </body>
+</html>
